@@ -334,7 +334,7 @@ async def _sync_to_garmin(hass, user, weight_kg, measurements):
             client = Garmin(email, password)
             client.login()
             hass.data[DOMAIN][cache_key] = client
-            timestamp = dt.now().strftime("%Y-%m-%dT%H:%M:%S"")
+            timestamp = dt.now().strftime("%Y-%m-%dT%H:%M:%S")
             client.add_body_composition(
                 timestamp=timestamp,
                 weight=weight_kg,
