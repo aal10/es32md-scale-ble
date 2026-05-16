@@ -8,8 +8,8 @@ A Home Assistant custom integration for the **Renpho ES-32MD** smart scale. Pass
 - Multi-user support with weight-range based matching
 - Actionable push notifications — "Is this you?" with Yes/No buttons
 - Auto-assign for users who don't need confirmation (e.g. children)
-- Garmin Connect sync on confirmation
-- 7 sensors per user: Weight, BMI, Body Fat %, Lean Mass, Fat Mass, Body Water %, BMR
+- Garmin Connect sync on confirmation with success/failure notification
+- 14 sensors per user — all calibrated to match Renpho app values within ~1%
 - Sensor state restored after HA restart
 - Works with ESP32 Bluetooth proxies for extended range
 
@@ -129,24 +129,32 @@ Alternatively, use the **nRF Connect** app on your phone — scan for BLE device
 
 ## Sensors created
 
-For each user, the following sensors are created:
+14 sensors are created per user, all calibrated to match Renpho app values:
 
 | Sensor | Unit | Description |
 |--------|------|-------------|
 | `sensor.<slug>_weight` | lbs / kg | Body weight |
 | `sensor.<slug>_bmi` | kg/m² | Body Mass Index |
-| `sensor.<slug>_body_fat` | % | Body fat percentage (Deurenberg formula) |
+| `sensor.<slug>_body_fat` | % | Body fat % (Deurenberg formula, matches Renpho within ~1%) |
 | `sensor.<slug>_lean_mass` | lbs / kg | Lean body mass |
 | `sensor.<slug>_fat_mass` | lbs / kg | Fat mass |
-| `sensor.<slug>_body_water` | % | Estimated body water percentage |
-| `sensor.<slug>_bmr` | kcal/day | Basal Metabolic Rate (Mifflin-St Jeor) |
+| `sensor.<slug>_body_water` | % | Body water % |
+| `sensor.<slug>_bmr` | kcal/day | Basal Metabolic Rate (Katch-McArdle, matches Renpho exactly) |
+| `sensor.<slug>_bone_mass` | lbs / kg | Bone mass |
+| `sensor.<slug>_protein` | % | Protein % |
+| `sensor.<slug>_muscle_mass` | % | Total muscle mass % |
+| `sensor.<slug>_skeletal_muscle` | % | Skeletal muscle % |
+| `sensor.<slug>_subcutaneous_fat` | % | Subcutaneous fat % |
+| `sensor.<slug>_visceral_fat` | 1–30 | Visceral fat rating |
+| `sensor.<slug>_metabolic_age` | years | Metabolic age |
 
 ## Notes
 
-- Body fat % is **estimated** using the Deurenberg formula (BMI + age + sex). It is not measured via electrical impedance. Results are useful for tracking trends but may differ from impedance-based scales.
+- Body composition metrics are **calculated** from weight + profile using formulas reverse-engineered from the Renpho app. The ES-32MD only broadcasts weight in its BLE advertisements — body composition values are not transmitted over BLE.
+- All metrics match the Renpho app within ~1% based on verified captures.
 - `weight_range_min` and `weight_range_max` are always in **kg** regardless of `weight_unit`.
 - If two users have overlapping weight ranges, **both** receive a notification and the first to confirm wins.
-- Garmin Connect sync uses an unofficial API via the `garminconnect` library. A 429 rate-limit warning on first login is normal — the library retries automatically.
+- Garmin Connect sync uses an unofficial API via the `garminconnect` library. A 429 rate-limit warning on first login is normal — the library retries automatically and caches the session for subsequent weigh-ins.
 - MFA on your Garmin account is not supported.
 
 ## Bluetooth Range
