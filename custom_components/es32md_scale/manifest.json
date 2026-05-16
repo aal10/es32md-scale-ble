@@ -1,7 +1,7 @@
 {
   "domain": "es32md_scale",
   "name": "ES-32MD Scale BLE",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "dependencies": ["bluetooth"],
   "after_dependencies": ["bluetooth"],
   "codeowners": ["@aal10"],
