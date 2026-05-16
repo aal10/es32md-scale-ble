@@ -1,0 +1,12 @@
+{
+  "domain": "es32md_scale",
+  "name": "ES-32MD Scale BLE",
+  "version": "1.0.0",
+  "dependencies": ["bluetooth"],
+  "after_dependencies": ["bluetooth"],
+  "codeowners": ["@aal10"],
+  "config_flow": false,
+  "documentation": "https://github.com/aal10/es32md-scale-ble",
+  "iot_class": "local_push",
+  "requirements": ["garminconnect>=0.2.10"]
+}
